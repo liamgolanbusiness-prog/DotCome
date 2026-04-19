@@ -3,7 +3,7 @@ import { he } from "@/content/he";
 export default function Footer() {
   const cols = he.footer.columns;
   return (
-    <footer className="relative overflow-hidden border-t border-white/5 bg-ink-950 pt-16 md:pt-24">
+    <footer className="relative border-t border-white/5 bg-ink-950 pt-16 md:pt-24">
       <div className="mx-auto max-w-7xl px-5 md:px-6">
         <div className="grid gap-8 md:gap-12 md:grid-cols-[1.5fr_1fr_1fr_1fr]">
           <div>
@@ -45,12 +45,12 @@ export default function Footer() {
 
       <div
         aria-hidden
-        className="pointer-events-none mt-16 flex w-full select-none items-center justify-center overflow-hidden px-4 md:mt-24"
+        className="pointer-events-none mt-16 w-full select-none overflow-clip md:mt-24"
       >
         <div
           dir="ltr"
-          className="w-full bg-neon-gradient bg-clip-text text-center font-display font-black leading-[0.85] text-transparent"
-          style={{ fontSize: "clamp(4rem, 21vw, 22rem)" }}
+          className="w-full bg-neon-gradient bg-clip-text text-center font-display font-black leading-[0.9] text-transparent"
+          style={{ fontSize: "clamp(3.5rem, 19vw, 22rem)" }}
         >
           DotCome
         </div>
