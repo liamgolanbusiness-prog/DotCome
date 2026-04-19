@@ -3,8 +3,10 @@
 import { useRef, useLayoutEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion, useInView } from "framer-motion";
 import { he } from "@/content/he";
 import SectionKicker from "@/components/ui/SectionKicker";
+import RevealText from "@/components/ui/RevealText";
 
 export default function Process() {
   const rootRef = useRef<HTMLDivElement>(null);
@@ -41,12 +43,16 @@ export default function Process() {
       {/* ── Mobile: vertical stack ── */}
       <div className="block md:hidden px-5 py-20">
         <SectionKicker>{he.process.kicker}</SectionKicker>
-        <h2 className="font-display text-3xl font-black">{he.process.title}</h2>
+        <RevealText as="h2" className="font-display text-3xl font-black">{he.process.title}</RevealText>
         <div className="mt-10 space-y-4">
-          {he.process.phases.map((p) => (
-            <div
+          {he.process.phases.map((p, i) => (
+            <motion.div
               key={p.num}
-              className="relative flex flex-col justify-between overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-white/[0.04] to-transparent p-7 backdrop-blur-xl"
+              initial={{ opacity: 0, y: 60, scale: 0.94 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true, amount: 0.25 }}
+              transition={{ duration: 0.65, delay: i * 0.08, ease: [0.16, 1, 0.3, 1] }}
+              className="relative flex flex-col justify-between overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-white/[0.05] to-transparent p-7 backdrop-blur-xl"
             >
               <div className="bg-neon-gradient bg-clip-text font-display text-[5rem] font-black leading-none text-transparent">
                 {p.num}
@@ -55,7 +61,7 @@ export default function Process() {
                 <h3 className="font-display text-2xl font-black">{p.name}</h3>
                 <p className="mt-3 text-sm leading-relaxed text-fg/75">{p.desc}</p>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

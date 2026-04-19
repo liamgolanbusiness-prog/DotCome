@@ -16,16 +16,16 @@ export default function RevealText({
   as?: ElementType;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-15% 0px" });
+  const inView = useInView(ref, { once: true, margin: "-8% 0px" });
   const Wrapper = as as ElementType;
 
   return (
     <Wrapper ref={ref} className={cn("overflow-hidden", className)}>
       <motion.span
         style={{ display: "block" }}
-        initial={{ y: "110%", opacity: 0 }}
-        animate={inView ? { y: "0%", opacity: 1 } : {}}
-        transition={{ duration: 0.9, delay, ease: [0.22, 1, 0.36, 1] }}
+        initial={{ y: "105%", opacity: 0, filter: "blur(6px)" }}
+        animate={inView ? { y: "0%", opacity: 1, filter: "blur(0px)" } : {}}
+        transition={{ duration: 0.85, delay, ease: [0.16, 1, 0.3, 1] }}
       >
         {children}
       </motion.span>

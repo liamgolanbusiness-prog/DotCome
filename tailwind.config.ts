@@ -39,6 +39,8 @@ export default {
         "gradient-shift": "gradient-shift 12s ease infinite",
         float: "float 6s ease-in-out infinite",
         marquee: "marquee 40s linear infinite",
+        "marquee-fast": "marquee 16s linear infinite",
+        "marquee-reverse": "marquee 22s linear infinite reverse",
         spotlight: "spotlight 2s ease .75s 1 forwards",
       },
       keyframes: {

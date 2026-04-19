@@ -1,12 +1,16 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
+import { useRef } from "react";
 import { he } from "@/content/he";
 import GlassCard from "@/components/ui/GlassCard";
 import SectionKicker from "@/components/ui/SectionKicker";
 import RevealText from "@/components/ui/RevealText";
 
 export default function Services() {
+  const gridRef = useRef<HTMLDivElement>(null);
+  const gridInView = useInView(gridRef, { once: true, amount: 0.1 });
+
   return (
     <section id="services" className="relative py-20 md:py-32">
       <div
@@ -19,20 +23,28 @@ export default function Services() {
           {he.services.title}
         </RevealText>
 
-        <div className="mt-10 grid gap-4 md:mt-20 md:grid-cols-2 md:gap-6">
+        <div ref={gridRef} className="mt-10 grid gap-4 md:mt-20 md:grid-cols-2 md:gap-6">
           {he.services.items.map((item, i) => (
             <motion.div
               key={item.num}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-10%" }}
-              transition={{ duration: 0.7, delay: i * 0.08 }}
+              initial={{ opacity: 0, y: 70, scale: 0.94 }}
+              animate={gridInView ? { opacity: 1, y: 0, scale: 1 } : {}}
+              transition={{
+                duration: 0.75,
+                delay: i * 0.12,
+                ease: [0.16, 1, 0.3, 1],
+              }}
             >
               <GlassCard className="group h-full !p-6 md:!p-8">
                 <div className="flex items-start justify-between">
-                  <span className="font-display text-5xl font-black text-white/10 transition-colors group-hover:text-white/30 md:text-6xl">
+                  <motion.span
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={gridInView ? { opacity: 1, x: 0 } : {}}
+                    transition={{ duration: 0.6, delay: 0.15 + i * 0.12, ease: [0.16, 1, 0.3, 1] }}
+                    className="font-display text-5xl font-black text-white/10 transition-colors group-hover:text-white/30 md:text-6xl"
+                  >
                     {item.num}
-                  </span>
+                  </motion.span>
                   <div className="h-10 w-10 rounded-2xl bg-neon-gradient opacity-70 transition-all duration-500 group-hover:rotate-45 group-hover:opacity-100 md:h-12 md:w-12" />
                 </div>
                 <h3 className="mt-6 font-display text-2xl font-bold md:mt-8 md:text-3xl">{item.title}</h3>
