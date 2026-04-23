@@ -59,6 +59,11 @@ export default function Footer() {
       <div className="mx-auto max-w-7xl px-5 md:px-6">
         <div className="flex flex-col items-center justify-between gap-3 border-t border-white/5 py-6 text-xs text-muted md:flex-row md:gap-4 md:py-8">
           <span>{he.footer.copy}</span>
+          <nav className="flex items-center gap-4">
+            <a href="/privacy" className="hover:text-fg">מדיניות פרטיות</a>
+            <span aria-hidden>·</span>
+            <a href="/terms" className="hover:text-fg">תנאי שימוש</a>
+          </nav>
           <span className="tracking-[0.2em]">Tel Aviv · Worldwide</span>
         </div>
       </div>

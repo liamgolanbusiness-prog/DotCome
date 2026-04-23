@@ -8,6 +8,7 @@ export default function CustomCursor() {
 
   useEffect(() => {
     if (window.matchMedia("(pointer: coarse)").matches) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
     let mx = window.innerWidth / 2;
     let my = window.innerHeight / 2;

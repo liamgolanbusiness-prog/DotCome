@@ -1,12 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { Heebo, Rubik } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
-import LenisProvider from "@/components/providers/LenisProvider";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
-import CustomCursor from "@/components/ui/CustomCursor";
-import ScrollProgress from "@/components/ui/ScrollProgress";
-import PageLoader from "@/components/ui/PageLoader";
 
 const heebo = Heebo({
   subsets: ["hebrew", "latin"],
@@ -48,14 +44,9 @@ export default function RootLayout({
   return (
     <html lang="he" dir="rtl" className={`${heebo.variable} ${rubik.variable}`}>
       <body className="bg-ink-950 text-fg font-sans antialiased noise">
-        <LenisProvider>
-          <PageLoader />
-          <CustomCursor />
-          <ScrollProgress />
-          <Navbar />
-          <main className="relative">{children}</main>
-          <Footer />
-        </LenisProvider>
+        {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
