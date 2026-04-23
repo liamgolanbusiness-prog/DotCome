@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import { he } from "@/content/he";
 import { cn } from "@/lib/utils";
@@ -36,7 +37,7 @@ export default function Navbar() {
           )}
         >
           <a href="#top" dir="ltr" className="flex items-center gap-2 font-display text-xl font-black tracking-tight md:text-2xl">
-            <span className="inline-block h-2 w-2 rounded-full bg-neon-gradient" />
+            <Image src="/logo.png" alt="DotCome" width={32} height={32} priority className="h-7 w-7 md:h-8 md:w-8" />
             <span>{he.brand.name}</span>
           </a>
 
@@ -115,7 +116,7 @@ export default function Navbar() {
             </motion.a>
 
             <div className="mt-auto pt-10 text-sm text-muted">
-              hello@dotcome.co.il
+              liamgolanbusiness@gmail.com
             </div>
           </motion.div>
         )}

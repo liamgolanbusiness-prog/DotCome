@@ -10,6 +10,20 @@ import Button from "@/components/ui/Button";
 export default function Contact() {
   const [sent, setSent] = useState(false);
 
+  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const form = e.currentTarget;
+    const data = new FormData(form);
+    const name = String(data.get("name") ?? "");
+    const email = String(data.get("email") ?? "");
+    const budget = String(data.get("budget") ?? "");
+    const message = String(data.get("message") ?? "");
+    const subject = `פנייה חדשה מ${name || "האתר"}`;
+    const body = `שם: ${name}\nאימייל: ${email}\nתקציב: ${budget}\n\n${message}`;
+    window.location.href = `mailto:${he.contact.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setSent(true);
+  };
+
   return (
     <section id="contact" className="relative overflow-hidden py-20 md:py-32">
       <div
@@ -42,7 +56,7 @@ export default function Contact() {
           <div className="mt-8 space-y-3 md:mt-12 md:space-y-4">
             {[
               { label: "Email", value: he.contact.email, href: `mailto:${he.contact.email}` },
-              { label: "WhatsApp", value: `${he.contact.whatsapp} ←`, href: "https://wa.me/972500000000" },
+              { label: "WhatsApp", value: `${he.contact.whatsapp} ←`, href: "https://wa.me/972585881234" },
             ].map((item, i) => (
               <motion.a
                 key={item.label}
@@ -65,7 +79,7 @@ export default function Contact() {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true, amount: 0.2 }}
           transition={{ duration: 0.75, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-          onSubmit={(e) => { e.preventDefault(); setSent(true); }}
+          onSubmit={onSubmit}
           className="relative rounded-2xl border border-white/10 bg-white/[0.03] p-6 backdrop-blur-xl md:rounded-3xl md:p-8"
         >
           <div className="space-y-4 md:space-y-5">
@@ -81,6 +95,7 @@ export default function Contact() {
                   {he.contact.fields[f]}
                 </label>
                 <input
+                  name={f}
                   type={f === "email" ? "email" : "text"}
                   required
                   className="w-full rounded-xl border border-white/10 bg-ink-950/50 px-4 py-3 text-fg outline-none transition-all focus:border-neon-violet focus:shadow-[0_0_0_3px_rgba(124,58,237,0.15)]"
@@ -97,6 +112,7 @@ export default function Contact() {
                 {he.contact.fields.message}
               </label>
               <textarea
+                name="message"
                 rows={4}
                 required
                 className="w-full resize-none rounded-xl border border-white/10 bg-ink-950/50 px-4 py-3 text-fg outline-none transition-all focus:border-neon-violet focus:shadow-[0_0_0_3px_rgba(124,58,237,0.15)]"

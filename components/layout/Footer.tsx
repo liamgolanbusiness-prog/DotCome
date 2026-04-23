@@ -14,10 +14,10 @@ export default function Footer() {
               {he.footer.made}
             </p>
             <a
-              href="#contact"
+              href="mailto:liamgolanbusiness@gmail.com"
               className="mt-6 inline-flex items-center gap-2 text-sm text-neon-cyan hover:text-fg"
             >
-              hello@dotcome.co.il ←
+              liamgolanbusiness@gmail.com ←
             </a>
           </div>
 

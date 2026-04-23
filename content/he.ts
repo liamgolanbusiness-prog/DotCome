@@ -206,7 +206,7 @@ export const he = {
       message: "ספרו לנו על הפרויקט",
     },
     submit: "שלחו הודעה",
-    email: "hello@dotcome.co.il",
+    email: "liamgolanbusiness@gmail.com",
     whatsapp: "WhatsApp",
   },
 
