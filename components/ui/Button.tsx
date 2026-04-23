@@ -9,6 +9,8 @@ type Props = {
   variant?: "primary" | "ghost";
   className?: string;
   onClick?: () => void;
+  type?: "button" | "submit" | "reset";
+  disabled?: boolean;
 };
 
 export default function Button({
@@ -17,6 +19,8 @@ export default function Button({
   variant = "primary",
   className,
   onClick,
+  type,
+  disabled,
 }: Props) {
   const base =
     "group relative inline-flex items-center gap-3 rounded-full px-7 py-4 text-sm font-medium tracking-wide transition-all duration-300 will-change-transform";
@@ -46,7 +50,12 @@ export default function Button({
     );
   }
   return (
-    <button onClick={onClick} className={cn(base, styles, className)}>
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(base, styles, disabled && "opacity-50 pointer-events-none", className)}
+    >
       {content}
     </button>
   );
