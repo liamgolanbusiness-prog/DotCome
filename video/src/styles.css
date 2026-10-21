@@ -312,7 +312,7 @@ body {
 .tchip i { display: block; width: 16px; height: 16px; border-radius: 50%; flex: none; }
 .cat { flex: none; height: 84px; display: flex; align-items: center; gap: 14px; padding: 0 30px; border-radius: 999px; background: rgba(18, 20, 46, 0.95); border: 2px solid rgba(34, 211, 238, 0.55); font-family: "Rubik", sans-serif; font-weight: 800; font-size: 34px; white-space: nowrap; box-shadow: 0 0 40px rgba(34, 211, 238, 0.18); }
 .cat .ic { color: var(--cyan); font-size: 38px; }
-.hub { position: absolute; width: 190px; height: 190px; margin: -95px 0 0 -95px; }
+.hub { position: absolute; left: 0; top: 0; width: 190px; height: 190px; margin: -95px 0 0 -95px; }
 .hub-name { position: absolute; left: 0; right: 0; top: 50%; margin-top: -34px; text-align: center; font-family: "Rubik", sans-serif; font-weight: 900; font-size: 56px; color: var(--ink-950); }
 .int-b { position: absolute; inset: 0; z-index: 5; }
 .int-h2 { position: absolute; left: 0; right: 0; top: 60px; text-align: center; }
@@ -433,7 +433,7 @@ body {
 .fmt-port .int-h .h1 { font-size: 78px; }
 .fmt-port .int-h2 { top: 80px; padding: 0 50px; }
 .fmt-port .int-h2 .h1 { font-size: 72px; }
-.fmt-port .rules { right: 50px; left: 50px; width: auto; top: 975px; gap: 22px; }
+.fmt-port .rules { right: 50px; left: 50px; width: auto; top: 1000px; gap: 22px; }
 .fmt-port .rule .when { width: 380px; }
 .fmt-port .rule .when, .fmt-port .rule .then { font-size: 31px; }
 
@@ -452,6 +452,8 @@ body {
 
 /* balanced wrapping for display copy */
 .h1, .val-line span, .stat-lbl, .step-desc, .st-desc, .cta-tag span { text-wrap: balance; }
+.fmt-port .cat { height: 70px; padding: 0 22px; font-size: 28px; gap: 10px; }
+.fmt-port .cat .ic { font-size: 30px; }
 .fmt-port .tchip { height: 60px; padding: 0 18px; font-size: 24px; gap: 8px; }
 .fmt-port .tchip i { width: 12px; height: 12px; }
 .fmt-port .tile { width: 92px; height: 92px; }

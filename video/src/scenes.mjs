@@ -263,26 +263,96 @@ function leads(fmt, T) {
     </div>`);
 }
 
-// Ellipse placement; `gap` excludes a sector around 12 o'clock where the headline sits.
-function ellipse(n, rx, ry, phase = 0, gapDeg = 0) {
-  const pts = [];
+// Ellipse placement, evenly spaced along the arc; `hdisc` > 1 discounts horizontal distance so wide
+// items get more room side by side than stacked; `gapDeg` leaves out a sector around 12 o'clock
+// where the headline sits.
+function ellipse(n, rx, ry, phase = 0, gapDeg = 0, hdisc = 1) {
+  const from = 90 + gapDeg / 2 + phase;
   const span = 360 - gapDeg;
-  for (let i = 0; i < n; i++) {
-    const deg = 90 + gapDeg / 2 + phase + (span * (i + 0.5)) / n; // 90 = top (screen y up)
+  const STEPS = 3600;
+  const pt = (deg) => {
     const a = (deg * Math.PI) / 180;
-    pts.push([Math.round(Math.cos(a) * rx), Math.round(-Math.sin(a) * ry)]);
+    return [Math.cos(a) * rx, -Math.sin(a) * ry];
+  };
+  const cum = [0];
+  let prev = pt(from);
+  for (let i = 1; i <= STEPS; i++) {
+    const cur = pt(from + (span * i) / STEPS);
+    cum.push(cum[i - 1] + Math.hypot((cur[0] - prev[0]) / hdisc, cur[1] - prev[1]));
+    prev = cur;
+  }
+  const total = cum[STEPS];
+  const pts = [];
+  let j = 0;
+  for (let i = 0; i < n; i++) {
+    const target = (total * (i + 0.5)) / n;
+    while (j < STEPS && cum[j + 1] < target) j++;
+    const [x, y] = pt(from + (span * j) / STEPS);
+    pts.push([Math.round(x), Math.round(y)]);
   }
   return pts;
 }
 
 export const INT_GEOM = {
-  land: { cx: 960, cy: 610, r1: [330, 210], r2: [600, 330], r3: [880, 420], gap: 40 },
-  port: { cx: 540, cy: 1020, r1: [250, 300], r2: [340, 520], r3: [385, 790], gap: 46 },
+  land: {
+    cx: 960, cy: 615, r2: [540, 260], r3: [700, 400], arcSpan: 104, colX: 790, colH: 640,
+    r1pts: [[-277, -75], [-277, 75], [0, 150], [277, 75], [277, -75], [0, -150]],
+  },
+  // portrait is too narrow for a third ring: the outer items sit in rows above and below the core
+  port: {
+    cx: 540, cy: 1020, r2: [410, 500], rows: [-720, -600, 600, 720, 840],
+    r1pts: [[-190, -255], [-225, 0], [-190, 255], [190, 255], [225, 0], [190, -255]],
+  },
 };
+
+const chipW = (name, fmt) => name.length * (fmt === "port" ? 14.5 : 17) + (fmt === "port" ? 56 : 72);
+
+// Outer items: in 16:9 on an ellipse with the wide name chips on its flanks; in 9:16 in centred rows.
+function outerLayout(fmt, g, items) {
+  if (fmt === "port") {
+    const W = 1000, GAP = 22, TILE = 92;
+    const width = (it) => (it.icon ? TILE : chipW(it.chip[0], fmt));
+    const rows = g.rows.map(() => []);
+    let r = 0;
+    for (const it of items) {
+      const used = rows[r].reduce((a, x) => a + width(x) + GAP, 0);
+      if (used + width(it) > W && r < rows.length - 1) r++;
+      rows[r].push(it);
+    }
+    const out = [];
+    rows.forEach((row, ri) => {
+      const total = row.reduce((a, x) => a + width(x), 0) + GAP * (row.length - 1);
+      let x = -total / 2;
+      row.forEach((it) => {
+        out.push({ it, x: Math.round(x + width(it) / 2), y: g.rows[ri] });
+        x += width(it) + GAP;
+      });
+    });
+    return out;
+  }
+  // 16:9: name chips stacked in two flank columns, logo tiles on the top and bottom arcs
+  const chips = items.filter((it) => it.chip);
+  const icons = items.filter((it) => it.icon);
+  const out = [];
+  const perCol = Math.ceil(chips.length / 2);
+  chips.forEach((it, i) => {
+    const col = i % 2 ? 1 : -1;
+    const row = Math.floor(i / 2);
+    const y = Math.round(-g.colH / 2 + (g.colH * row) / (perCol - 1));
+    out.push({ it, x: col * (g.colX + (row % 2 ? 26 : 0)), y });
+  });
+  const top = Math.floor(icons.length / 2);
+  const arc = (n, centre) => Array.from({ length: n }, (_, i) => {
+    const a = ((centre - g.arcSpan / 2 + (g.arcSpan * (i + 0.5)) / n) * Math.PI) / 180;
+    return [Math.round(Math.cos(a) * g.r3[0]), Math.round(-Math.sin(a) * g.r3[1])];
+  });
+  [...arc(top, 90), ...arc(icons.length - top, 270)].forEach(([x, y], i) => out.push({ it: icons[i], x, y }));
+  return out;
+}
 
 function integrations(fmt, T) {
   const g = INT_GEOM[fmt];
-  const p1 = ellipse(CATS.length, ...g.r1, 30);
+  const p1 = g.r1pts || ellipse(CATS.length, ...g.r1, 30);
   const p2 = ellipse(RING2.length, ...g.r2, 10);
   const ring3 = [];
   RING3_ICONS.forEach((k, i) => {
@@ -290,7 +360,7 @@ function integrations(fmt, T) {
     if (i < RING3_CHIPS.length) ring3.push({ chip: RING3_CHIPS[i] });
   });
   for (let i = RING3_ICONS.length; i < RING3_CHIPS.length; i++) ring3.push({ chip: RING3_CHIPS[i] });
-  const p3 = ellipse(ring3.length, ...g.r3, 0, g.gap);
+  const outer = outerLayout(fmt, g, ring3);
 
   const lines = [];
   const cats = CATS.map(([ic, t], i) => {
@@ -303,8 +373,7 @@ function integrations(fmt, T) {
     lines.push(`<line class="ln2" x1="1200" y1="1200" x2="${1200 + x}" y2="${1200 + y}"/>`);
     return `<div class="node" style="left:${x}px;top:${y}px"><div class="tile r2">${brand(k)}</div></div>`;
   }).join("");
-  const tiles3 = ring3.map((it, i) => {
-    const [x, y] = p3[i];
+  const tiles3 = outer.map(({ it, x, y }) => {
     if (it.icon) return `<div class="node" style="left:${x}px;top:${y}px"><div class="tile r3">${brand(it.icon)}</div></div>`;
     const [name, color] = it.chip;
     return `<div class="node" style="left:${x}px;top:${y}px"><div class="tchip r3"><i style="background:${color}"></i>${name}</div></div>`;

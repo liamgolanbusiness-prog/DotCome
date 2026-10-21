@@ -355,7 +355,7 @@
     const t3 = $$(".r3", sc);
     const l1 = $$(".ln1", sc);
     const l2 = $$(".ln2", sc);
-    const g = P ? { cx: 540, cy: 1020, x: 540, y: 605, sc: 0.44 } : { cx: 960, cy: 610, x: 440, y: 590, sc: 0.5 };
+    const g = P ? { cx: 540, cy: 1020, x: 540, y: 605, sc: 0.44 } : { cx: 960, cy: 615, x: 465, y: 600, sc: 0.48 };
 
     reveal($(".int-h", sc), s + 0.1, { y: -30 });
     tl.fromTo($(".hub", sc), { scale: 0 }, { scale: 1, duration: 0.6, ease: "back.out(2)" }, s + 0.3);
@@ -377,10 +377,10 @@
       reveal(c, t, { scale: 0.3 }, 0.4, "back.out(2.2)");
       if (i % 3 === 0) cue("tick_soft", t);
     });
-    tl.fromTo(con, { scale: 0.95 }, { scale: 1.03, duration: 7, ease: "sine.inOut" }, s + 0.3);
+    tl.fromTo(con, { scale: 0.95 }, { scale: 1, duration: 7, ease: "sine.inOut" }, s + 0.3);
     const r = rng(11);
     $$(".node", con).forEach((n) => {
-      const amp = 6 + r() * 8;
+      const amp = 4 + r() * 5;
       tl.fromTo(n, { y: 0 }, { y: -amp, duration: 1.4 + r() * 0.8, ease: "sine.inOut", yoyo: true, repeat: 3 }, s + 1.2 + r() * 0.6);
     });
 
