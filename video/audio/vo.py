@@ -75,7 +75,9 @@ order = list(base["scenes"].keys())
 need = {k: base["scenes"][k][1] for k in order}
 for seg in script:
     end = seg["at"] + len(clips[seg["id"]]) / SR + 0.7
-    need[seg["scene"]] = max(need[seg["scene"]], round(end + 0.04, 2))
+    need[seg["scene"]] = max(need[seg["scene"]], end)
+# whole beats (120 BPM) keep every scene cut on the music grid
+need = {k: float(np.ceil(v * 2 - 1e-6) / 2) for k, v in need.items()}
 # within-scene collisions: warn so the offsets in vo-script.json can be nudged
 for a, b in zip(script, script[1:]):
     if a["scene"] == b["scene"] and a["at"] + len(clips[a["id"]]) / SR > b["at"] - 0.15:

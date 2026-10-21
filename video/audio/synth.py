@@ -260,41 +260,44 @@ def score():
     K, C, Hc, Ho = kick(), clap(), hat(), hat(True)
     kick_times = []
 
-    nbars = int(np.ceil(TOTAL / BAR))
-    for b in range(nbars):
-        t0 = b * BAR
+    # evaluated per beat so a section that starts mid-bar (narration-stretched scenes) comes in on time
+    nbeats = int(np.ceil(TOTAL / BEAT))
+    for k in range(nbeats):
+        t0 = k * BEAT
+        q = k % 4
         sec = section(t0 + 0.01)
-        notes, broot = CHORDS[b % 4]
-        if sec == "hook":
+        notes, broot = CHORDS[(k // 4) % 4]
+        if sec in ("hook", "outro"):
             continue
-        if sec == "outro":
-            continue
-        pad_gain = {"light": 0.55, "break": 0.9}.get(sec, 0.75)
-        place(pads, pad_chord(notes, BAR, bright=2400 if sec in ("full+", "build") else 1700), t0, pad_gain)
+        if q == 0 or section(t0 - BEAT + 0.01) != sec:
+            pad_gain = {"light": 0.55, "break": 0.9}.get(sec, 0.75)
+            place(pads, pad_chord(notes, (4 - q) * BEAT, bright=2400 if sec in ("full+", "build") else 1700), t0, pad_gain)
         if sec != "break":
-            for q in range(4):
-                tk = t0 + q * BEAT
-                place(drums, K, tk, 0.95)
-                kick_times.append(tk)
-                if sec != "light" and q in (1, 3):
-                    place(drums, C, tk, 0.55, pan=0.05)
-                place(drums, Ho if (sec == "full+" and q % 2) else Hc, tk + BEAT / 2, 0.38, pan=-0.25)
-                if sec in ("full", "full+", "build", "noarp"):
-                    place(drums, Hc, tk + BEAT * 0.25, 0.16, pan=0.3)
-                    place(drums, Hc, tk + BEAT * 0.75, 0.16, pan=0.3)
-            for e8 in range(8):
+            place(drums, K, t0, 0.95)
+            kick_times.append(t0)
+            if sec != "light" and q in (1, 3):
+                place(drums, C, t0, 0.55, pan=0.05)
+            place(drums, Ho if (sec == "full+" and q % 2) else Hc, t0 + BEAT / 2, 0.38, pan=-0.25)
+            if sec in ("full", "full+", "build", "noarp"):
+                place(drums, Hc, t0 + BEAT * 0.25, 0.16, pan=0.3)
+                place(drums, Hc, t0 + BEAT * 0.75, 0.16, pan=0.3)
+            for h in range(2):
+                e8 = q * 2 + h
                 m = broot + (12 if e8 in (3, 6) else 0)
-                place(bass, bass_note(m, BEAT / 2 * 0.92), t0 + e8 * BEAT / 2, 0.85)
+                place(bass, bass_note(m, BEAT / 2 * 0.92), t0 + h * BEAT / 2, 0.85)
         if sec in ("full", "full+", "build", "break"):
-            for s16 in range(16):
+            for h in range(4):
+                s16 = q * 4 + h
                 m = notes[ARP[s16 % 8]] + 12
                 g = 0.55 if s16 % 4 == 0 else 0.38
                 if sec == "build":
                     g *= 0.6 + 0.4 * ((t0 - S["leads"]) / max(1, E["leads"] - S["leads"]))
-                place(arps, pluck(m), t0 + s16 * BEAT / 4, g, pan=0.35 if s16 % 2 else -0.35)
+                place(arps, pluck(m), t0 + h * BEAT / 4, g, pan=0.35 if s16 % 2 else -0.35)
         if sec == "light":
-            for s8 in (0, 3, 6):
-                place(arps, pluck(notes[ARP[s8]] + 12, bright=0.6), t0 + s8 * BEAT / 2, 0.28, pan=0.2)
+            for h in range(2):
+                e8 = q * 2 + h
+                if e8 in (0, 3, 6):
+                    place(arps, pluck(notes[ARP[e8]] + 12, bright=0.6), t0 + h * BEAT / 2, 0.28, pan=0.2)
 
     # --- hook: tension bed
     h0, h1 = 0.0, S["intro"]
