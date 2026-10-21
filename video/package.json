@@ -1,0 +1,22 @@
+{
+  "name": "dotcome-dani-video",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node build.mjs",
+    "audio": "node build.mjs && node tools/extract-cues.mjs text && python3 audio/synth.py text && node build.mjs",
+    "vo": "python3 audio/vo.py && node build.mjs && node tools/extract-cues.mjs vo && python3 audio/synth.py vo && node build.mjs",
+    "preview": "npx hyperframes preview",
+    "render": "tools/render.sh land-text port-text",
+    "render:vo": "tools/render.sh land-vo port-vo"
+  },
+  "devDependencies": {
+    "@fontsource/heebo": "^5.3.0",
+    "@fontsource/rubik": "^5.3.0",
+    "gsap": "^3.12.5",
+    "hyperframes": "^0.8.181",
+    "lucide-static": "^1.61.0",
+    "simple-icons": "^16.35.0"
+  },
+  "private": true,
+  "type": "module"
+}

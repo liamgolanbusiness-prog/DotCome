@@ -1,0 +1,7 @@
+# generated — rebuild with `npm run build` / `npm run audio`
+index.html
+builds/
+build/
+out/
+assets/audio/
+.hyperframes/
